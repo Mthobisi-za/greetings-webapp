@@ -2,7 +2,7 @@
             <div class="greet_section">
                 <h2 class="h2_greet">Greeting</h2>
             </div>
-                  <form action="/greetings" method="POST">
+                  <form action="/greet" method="POST">
             <div class="info_">
                 <label for="name" class="label_first">Name</label></span>
                 <input type="text" name="name" id="name" placeholder="John">
@@ -30,6 +30,6 @@
             <span id="lang">{{data.userLang}}</span> <span id="namees" style="color: gray;">{{data.userName}}</span> <br> <br>
             <div class="floa"><span class="float">Number of greeted people is</span> <span class="num">{{data.count}}</span></div>
             <br>
-            <div class="alert"><span class="aler" style="color: orange;"></span></div>
+            <div class="alert"><span class="aler" style="color: orange;"><a href="/greeted">Greeted People</a></span></div>
         </div>
   

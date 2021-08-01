@@ -1,5 +1,6 @@
 module.exports = function businessLogic() {
-    var records = [] 
+  var records = [];
+  var all = []
   var userName;
   var userLang;
   var count = 0;
@@ -11,9 +12,11 @@ module.exports = function businessLogic() {
                 if(num == -1){
                     count = count + 1;
                     userName = data.name;
+                    all.push(userName)
                     records.push(userName)
                 }  else{
                     userName = data.name;
+                    all.push(userName)
                 }
         } 
         userFix();
@@ -35,12 +38,31 @@ module.exports = function businessLogic() {
     return {
       userLang,
       userName,
-      count,
+      count
     };
   }
+  function getGreeted(){
+  var correct = [];
+    for(let i = 0; i < records.length; i++){
+      correct.push({name: records[i]})
+    }
+    return correct
+  }
+  function getNames(name){
+    var correct = [];
+    for(let i = 0; i < all.length; i++){
+      if(all[i] == name){
+        correct.push(all[i])
+      } else{
 
+      }
+    } var num = correct.length;
+    return {correct, num, name}
+  }
   return {
     setUserNameAndLang,
     getData,
+    getGreeted,
+    getNames
   };
 };

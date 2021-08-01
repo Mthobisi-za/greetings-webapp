@@ -27,9 +27,17 @@ app.set("view engine", "handlebars")
 app.get('/' , (req , res)=>{
   res.render("index", {data: greeted.getData()});
 })
-app.post('/greetings' , (req , res)=>{
+app.post('/greet' , (req , res)=>{
   greeted.setUserNameAndLang(req.body);
   res.redirect('/')
+})
+app.get('/greeted' , (req , res)=>{
+  res.render('greeted', {data: greeted.getGreeted()});
+  
+});
+app.get('/count/:name' , (req , res)=>{
+var name = req.params.name;
+  res.render("specific", {data: greeted.getNames(name)});
 })
 //route-------****
 
