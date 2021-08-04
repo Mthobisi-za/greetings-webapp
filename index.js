@@ -33,7 +33,6 @@ app.post('/greet' , (req , res)=>{
 })
 app.get('/greeted' , (req , res)=>{
   res.render('greeted', {data: greeted.getGreeted()});
-  
 });
 app.get('/count/:name' , (req , res)=>{
 var name = req.params.name;

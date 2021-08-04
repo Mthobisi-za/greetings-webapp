@@ -21,13 +21,13 @@ module.exports = function businessLogic() {
         } 
         userFix();
         function langFix(){
-                if (data.Group == "English") {
-                return (userLang = "Hello");
-                } else if (data.Group == "Sesotho") {
-                return (userLang == "Dumela");
-                } else if (data.Group == "Isizulu") {
-                return (userLang = "Sawbona");
-                } else {
+                if (data.Group === "English") {
+                return userLang = "Hello";
+                }  else if (data.Group === "Isizulu") {
+                return userLang = "Sawbona";
+                } else if (data.Group === 'Sesotho') {
+                return userLang = "Dumela";
+                }else {
                 return ""
                 }
         }
