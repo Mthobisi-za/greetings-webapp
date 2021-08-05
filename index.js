@@ -39,7 +39,14 @@ var name = req.params.name;
   res.render("specific", {data: greeted.getNames(name)});
 })
 //route-------****
-
+//----home route---//
+app.get('/home' , (req , res)=>{
+ res.redirect("/")
+})
+app.get('/back' , (req , res)=>{
+  res.redirect("/greeted")
+ })
+//--home route----//
 const PORT = process.env.PORT || 3009;
 
 app.listen(PORT, ()=>{
