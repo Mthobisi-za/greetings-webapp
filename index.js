@@ -4,6 +4,16 @@ const bodyparser = require("body-parser")
 const greet = require("./factory-function");
 const greeted = greet()
 const app = express();
+const {Pool} = require("pg");
+var connectStr = require("./poo")
+/*---------*/
+var pool = new Pool(connectStr)
+
+///----
+pool 
+    .query("SELECT * FROM mydata")
+    .then(res => console.log(res.rows))
+    .catch(err => console.log(err))
 //flash
 const flash = require('express-flash');
 const session = require("express-session")
@@ -16,7 +26,7 @@ const session = require("express-session")
   }));
   // initialise the flash middleware
   app.use(flash());
-//
+//                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
 app.use(bodyparser.urlencoded({extended: false}));
 app.use(bodyparser.json())
 app.use(express.static('public'));
@@ -24,11 +34,14 @@ app.engine("handlebars", exhbs({defaultLayout: "main", layoutsDir: "views/layout
 app.set("view engine", "handlebars")
 //setup configuration
 //route-------****
-app.get('/' , (req , res)=>{
+app.get('/' , (req , res)=>{ 
+  req.flash('info', greeted.getErrors().message);
   res.render("index", {data: greeted.getData()});
 })
 app.post('/greet' , (req , res)=>{
-  greeted.setUserNameAndLang(req.body);
+  var data = req.body
+  greeted.setUserNameAndLang(data);
+  data = ""
   res.redirect('/')
 })
 app.get('/greeted' , (req , res)=>{

@@ -4,9 +4,11 @@ module.exports = function businessLogic() {
   var userName;
   var userLang;
   var count = 0;
+  let message;
   //updated user values
 
   function setUserNameAndLang(data) {
+    var statement = "Group" in data;
         function userFix() {
                 var num = records.indexOf(data.name); 
                 if(num == -1){
@@ -17,9 +19,8 @@ module.exports = function businessLogic() {
                 }  else{
                     userName = data.name;
                     all.push(userName)
-                }
-        } 
-        userFix();
+              }
+        }  
         function langFix(){
                 if (data.Group === "English") {
                 return userLang = "Hello";
@@ -31,15 +32,41 @@ module.exports = function businessLogic() {
                 return ""
                 }
         }
-        langFix()
+        
+        var hasNum = /\d/;
+        
+       if(data.name == "" || data.name.startsWith(" ")){
+        message = "Please enter your name"
+       } else if(hasNum.test(data.name)){
+          message = "Please enter name that does not have numbers" 
+       }else{
+        if(statement){
+          userFix();
+          langFix();
+          message = ""
+        }else {
+          if(message !== undefined|| message == "Please enter name that does not have numbers" || message =="Please enter your name"){
+            message = message + " and select language"
+          }else{
+            message = "Please select language"
+          }
+          
+        }
+       }
   }
 
   function getData() {
     return {
       userLang,
       userName,
-      count
+      count,
+      
     };
+  }
+  function getErrors(){
+    return{
+      message
+    }
   }
   function getGreeted(){
   var correct = [];
@@ -63,6 +90,7 @@ module.exports = function businessLogic() {
     setUserNameAndLang,
     getData,
     getGreeted,
-    getNames
+    getNames,
+    getErrors
   };
 };
