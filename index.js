@@ -10,10 +10,13 @@ var connectStr = require("./poo")
 var pool = new Pool(connectStr)
 
 ///----
-pool 
-    .query("SELECT * FROM mydata")
-    .then(res => console.log(res.rows))
-    .catch(err => console.log(err))
+
+//pool 
+//    .query("SELECT * FROM mydata")
+//    .then(res => console.log(res.rows))
+//    .catch(err => console.log(err))
+
+    
 //flash
 const flash = require('express-flash');
 const session = require("express-session")
