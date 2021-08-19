@@ -1,4 +1,11 @@
+const dblogic = require("./db-factory");
+const useDb = dblogic();
+const {Pool} = require("pg");
+var connectStr = require("./poo")
+var pool = new Pool(connectStr);
 module.exports = function businessLogic() {
+  var virtualD1 = [];
+  var virtualD2 = []
   var records = [];
   var all = []
   var userName;
@@ -29,6 +36,7 @@ module.exports = function businessLogic() {
                 } else if (data.Group === 'Sesotho') {
                 return userLang = "Dumela";
                 }else {
+                conditions = false
                 return ""
                 }
         }
@@ -43,8 +51,11 @@ module.exports = function businessLogic() {
         if(statement){
           userFix();
           langFix();
-          message = ""
+          message = "";
+          useDb.setData(userLang,userName, count)
+         
         }else {
+         
           if(message !== undefined|| message == "Please enter name that does not have numbers" || message =="Please enter your name"){
             message = message + " and select language"
           }else{
@@ -60,7 +71,6 @@ module.exports = function businessLogic() {
       userLang,
       userName,
       count,
-      
     };
   }
   function getErrors(){
@@ -75,6 +85,13 @@ module.exports = function businessLogic() {
     }
     return correct
   }
+  function getGreetedDb(arry){
+    var correct = [];
+      for(let i = 0; i < arry.length; i++){
+        correct.push({name: arry[i]})
+      }
+      return correct
+    }
   function getNames(name){
     var correct = [];
     for(let i = 0; i < all.length; i++){
@@ -86,11 +103,48 @@ module.exports = function businessLogic() {
     } var num = correct.length;
     return {correct, num, name}
   }
+  
+  function condition(){
+    if(userLang  == undefined || userName ==undefined){
+      console.log(userName,userLang)
+      return "undefined"
+    }else{
+      console.log(userName,userLang)
+      return "defined"
+    }
+  }
+  function getNamesDb(name,res){
+    var arg;
+    var correct =[]
+    pool
+      .query("SELECT name FROM connecttb")
+      .then(resp =>{
+        arg = resp.rows;
+      for(let i = 0; i < arg.length; i++){
+          if(arg[i].name == name){
+            correct.push(arg[i])
+          } else{
+
+          }
+        }
+      })
+      .then(resp =>{ 
+        var num = correct.length;
+        var data = {correct,name, num}
+        res.render("specific", {data: data});
+      })
+      .catch(err =>{
+        console.log(err)
+      })
+  }
   return {
     setUserNameAndLang,
     getData,
     getGreeted,
+    getGreetedDb,
     getNames,
-    getErrors
+    getErrors,
+    condition,
+    getNamesDb
   };
 };

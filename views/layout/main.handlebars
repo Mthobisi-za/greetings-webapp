@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    
     <link rel="stylesheet" href="/css/greet.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,4 +13,11 @@
         {{{body}}}
         </div>
     </body>
+   <script src="/cond.js"></script>
+   <script type="module">
+       import { makeChanges, arrg} from "../cond.js";
+       makeChanges();
+       arrg.push("yea");
+       console.log(arrg)
+   </script>
 </html>
