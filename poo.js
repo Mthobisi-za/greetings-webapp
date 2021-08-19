@@ -8,7 +8,7 @@ var op = {database : process.env.DATABASE_URL, password: process.env.Pass}
 var check =  {database : process.env.DATABASE_URL }
 var connectStr ;
 if(process.env.DATABASE_URL){
-    connectStr = obj
+    connectStr = op
 } else{
     connectStr = obj
 };
