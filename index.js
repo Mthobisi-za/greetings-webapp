@@ -18,7 +18,7 @@ var connectStr = require("./poo")
 const dblogic = require("./db-factory");
 const useDb = dblogic();
 /*---------*/
-var pool = new Pool(connectStr)
+var pool = new Pool({connectStr})
 
 ///----
 /*
