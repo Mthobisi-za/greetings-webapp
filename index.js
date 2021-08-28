@@ -9,50 +9,82 @@ console.log(data)
 ///----database
 const express = require("express");
 const exhbs = require("express-handlebars");
-const bodyparser = require("body-parser")
+const bodyparser = require("body-parser");
 const greet = require("./factory-function");
-const greeted = greet()
+const greeted = greet();
 const app = express();
-const {Pool} = require("pg");
-var connectStr = require("./poo")
-const dblogic = require("./db-factory");
+const { Pool } = require("pg");
 
+const dblogic = require("./db-factory");
+////dev mode
+var obj = {
+  user: "mtho",
+  password: "mthobisi",
+  host: "localhost",
+  port: 5432,
+  database: "postgres",
+};
 /*---------*/
 var db = process.env.DATABASE_URL;
-var pool = new Pool({connectStr, ssl: {rejectUnauthorized: false} })
+var pool = new Pool({ db, ssl: { rejectUnauthorized: false } });
 const useDb = dblogic(pool);
-const flash = require('express-flash');
-const session = require("express-session")
+const flash = require("express-flash");
+const session = require("express-session");
 //config
- // initialise session middleware - flash-express depends on it
- app.use(session({
-    secret : "<add a secret string here>",
+// initialise session middleware - flash-express depends on it
+app.use(
+  session({
+    secret: "<add a secret string here>",
     resave: false,
-    saveUninitialized: true
-  }));
-  // initialise the flash middleware
-  app.use(flash());
-//                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
-app.use(bodyparser.urlencoded({extended: false}));
-app.use(bodyparser.json())
-app.use(express.static('public'));
-app.engine("handlebars", exhbs({defaultLayout: "main", layoutsDir: "views/layout"}));
-app.set("view engine", "handlebars")
+    saveUninitialized: true,
+  })
+);
+// initialise the flash middleware
+app.use(flash());
+//
+app.use(bodyparser.urlencoded({ extended: false }));
+app.use(bodyparser.json());
+app.use(express.static("public"));
+app.engine(
+  "handlebars",
+  exhbs({ defaultLayout: "main", layoutsDir: "views/layout" })
+);
+app.set("view engine", "handlebars");
 //setup configuration
 //route-------****
 
-app.get('/' , (req , res)=>{ 
-  req.flash('info', greeted.getErrors().message);
+app.get("/", (req, res) => {
+  req.flash("info", greeted.getErrors().message);
   //res.render("index", {data: greeted.getData()});
-  async function getData(){
-    var data = useDb.getData()
-    data
-      .then(data =>{console.log(data)})
-      .catch(err => console.log(err));
-    res.render('index')
+  async function getData() {
+    var promise = new Promise((resolve, reject) => {
+      resolve(pool.query("selct * from connecttb"));
+    })
+      .then((value) => {
+        var array = [];
+        var obj = {
+          count: 0,
+        };
+        var name = value.rows[value.rows.length - 1];
+        try {
+          value.rows((element) => {
+            if (array.indexOf(element.name) === -1) {
+              array.push(element.name);
+              obj.count++;
+            }
+          });
+        } catch (error) {}
+        obj["name"] = name.name;
+        obj["language"] = name.language;
+        console.log(value.rows);
+        res.render("index", { data: obj });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
   getData();
-})
+});
 /*
 app.post('/greet' , (req , res)=>{
   var data = req.body
@@ -90,6 +122,6 @@ app.get('/reset' , (req , res)=>{
 //--home route----//
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, ()=>{
-    console.log("server started on port " + PORT)
+app.listen(PORT, () => {
+  console.log("server started on port " + PORT);
 });
