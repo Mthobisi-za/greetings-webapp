@@ -16,19 +16,11 @@ const app = express();
 const {Pool} = require("pg");
 var connectStr = require("./poo")
 const dblogic = require("./db-factory");
-const useDb = dblogic();
-/*---------*/
-var pool = new Pool({connectStr})
 
-///----
-/*
-pool 
-    .query("SELECT * FROM mydata")
-    .then(res => console.log(res.rows))
-   .catch(err => console.log(err))
-*/
-    
-//flash
+/*---------*/
+var db = process.env.DATABASE_URL;
+var pool = new Pool({connectStr, ssl: {rejectUnauthorized: false} })
+const useDb = dblogic(pool);
 const flash = require('express-flash');
 const session = require("express-session")
 //config
@@ -48,17 +40,20 @@ app.engine("handlebars", exhbs({defaultLayout: "main", layoutsDir: "views/layout
 app.set("view engine", "handlebars")
 //setup configuration
 //route-------****
-app.get('/refresh', (req,res)=>{
-  setTimeout(()=>{
-    res.redirect('/')
-  }, 1000)
-})
 
 app.get('/' , (req , res)=>{ 
   req.flash('info', greeted.getErrors().message);
   //res.render("index", {data: greeted.getData()});
-  useDb.getData(res)
+  async function getData(){
+    var data = useDb.getData()
+    data
+      .then(data =>{console.log(data)})
+      .catch(err => console.log(err));
+    res.render('index')
+  }
+  getData();
 })
+/*
 app.post('/greet' , (req , res)=>{
   var data = req.body
   greeted.setUserNameAndLang(data);
@@ -91,6 +86,7 @@ app.get('/reset' , (req , res)=>{
   makeC()
   res.redirect('/refresh')
 })
+*/
 //--home route----//
 const PORT = process.env.PORT || 3000;
 
